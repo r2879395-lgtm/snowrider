@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowRider3D Cheat Wrapper</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #gameContainer {
+            width: 100%;
+            max-width: 960px; /* Standard WebGL resolution width */
+            margin-bottom: 20px;
+            border: 4px solid #1f6feb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(31, 111, 235, 0.5);
+        }
+        #unity-canvas {
+            width: 100%;
+            height: 540px; /* Standard 16:9 aspect ratio */
+            display: block;
+            background: #161b22;
+        }
+        .control-panel {
+            background-color: #161b22;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .btn {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px #0d1117;
+            position: relative;
+            top: 0;
+        }
+        .btn:active {
+            box-shadow: 0 2px #0d1117;
+            top: 2px;
+        }
+        .on {
+            background-color: #10b981 !important; /* Green */
+            color: white;
+        }
+        .off {
+            background-color: #ef4444 !important; /* Red */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <h1 class="text-3xl font-bold mb-6 text-blue-400">SnowRider3D Game Hack</h1>
+
+    <!-- 
+        1. GAME CONTAINER: This div holds the game canvas. 
+        You MUST replace the contents of this container with the original Unity WebGL code 
+        from your downloaded 'index.html', including the UnityLoader script.
+        
+        Example Placeholder (Replace this entirely with your game's initialization code):
+    -->
+    <div id="gameContainer" class="relative">
+        <canvas id="unity-canvas"></canvas>
+        <div id="loading-overlay" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center text-xl">
+            Loading Game... (Please replace this placeholder with your game's original Unity WebGL code)
+        </div>
+        <!-- 
+            YOU NEED TO INCLUDE YOUR GAME'S SCRIPTS HERE. 
+            For example:
+            <script src="Build/UnityLoader.js"></script>
+            <script>
+                var unityInstance = UnityLoader.instantiate("unity-canvas", "Build/snowrider3DD.json");
+            </script>
+        -->
+    </div>
+    <!-- END GAME CONTAINER REPLACEMENT SECTION -->
+
+    <!-- CONTROL PANEL -->
+    <div class="control-panel w-full max-w-lg flex flex-col space-y-4">
+        <p class="text-sm text-yellow-400 p-2 border border-yellow-600 rounded-lg">
+            🚨 **INSTRUCTION**: You must find and replace the placeholder values (e.g., `'Player'`, `'ToggleInvincibility'`) in the `hackScript.js` section below with the actual GameObject and C# Method names from the game's compiled code for the cheats to work!
+        </p>
+
+        <div class="flex space-x-4">
+            <!-- GOD MODE BUTTON -->
+            <button id="godModeBtn" onclick="toggleGodMode()" 
+                    class="btn flex-1 py-3 px-6 rounded-lg font-bold text-lg bg-gray-700 hover:bg-gray-600 off">
+                GOD MODE: OFF
+            </button>
+            
+            <!-- SUPER SPEED BUTTON -->
+            <button id="speedBtn" onclick="toggleSuperSpeed()"
+                    class="btn flex-1 py-3 px-6 rounded-lg font-bold text-lg bg-gray-700 hover:bg-gray-600 off">
+                SUPER SPEED: OFF
+            </button>
+        </div>
+    </div>
+    <!-- END CONTROL PANEL -->
+
+    <!-- HACK SCRIPT INJECTION -->
+    <script>
+        // --- GLOBAL CHEAT STATE ---
+        let godModeActive = false;
+        let superSpeedActive = false;
+        let unityInstance = null; // This variable must be set by your game's Unity Loader script
+
+        // --- SIMULATED UNITY API SETUP ---
+        // Since the real Unity instance isn't available here, we'll create a dummy one
+        // to show how the SendMessage API call should look.
+        // If your game uses UnityLoader, the global variable will likely be named 'unityInstance'.
+        const dummyUnityInstance = {
+            SendMessage: (gameObject, method, value) => {
+                const status = value !== undefined ? `Value: ${value}` : 'No value.';
+                console.log(`[HACK ATTEMPT] Calling C# Method: ${gameObject}.${method}. ${status}`);
+                console.warn("This is a DUMMY call. Replace 'unityInstance' with your game's actual Unity WebGL instance variable (e.g., the variable created by UnityLoader.instantiate).");
+            }
+        };
+
+        // You must replace 'dummyUnityInstance' with the actual global variable for your Unity game instance
+        // E.g., if your game's loading script does: `var myGame = UnityLoader.instantiate(...)`, then set:
+        // const gameInstance = myGame;
+        const gameInstance = dummyUnityInstance; 
+        
+        // --- CHEAT FUNCTIONS ---
+
+        // 1. GOD MODE (INVINCIBILITY)
+        function toggleGodMode() {
+            godModeActive = !godModeActive;
+            const btn = document.getElementById('godModeBtn');
+            const state = godModeActive ? "ON" : "OFF";
+            btn.textContent = `GOD MODE: ${state}`;
+            btn.classList.toggle('on', godModeActive);
+            btn.classList.toggle('off', !godModeActive);
+            
+            console.log(`God Mode Toggled: ${state}`);
+
+            // === CRITICAL HACK INJECTION POINT ===
+            // This attempts to call a C# function on a game object.
+            // You MUST find the actual 'GameObject Name' and 'Method Name' used for the player's 'Die' or 'Collision' script.
+            try {
+                // Assuming the player game object is named 'Player' and the script function is 'ToggleInvincibility'
+                gameInstance.SendMessage(
+                    'Player',                               // <<< REPLACE with your Player GameObject Name
+                    'ToggleInvincibility',                  // <<< REPLACE with a C# Method that handles invincibility
+                    godModeActive ? 1 : 0                   // Send a value (1 for true, 0 for false)
+                );
+            } catch (e) {
+                console.error("Failed to send God Mode message. Ensure 'gameInstance' is correctly defined and the method names are correct.", e);
+            }
+        }
+
+        // 2. SUPER SPEED HACK
+        const NORMAL_SPEED = 1.0;
+        const HACKED_SPEED = 5.0; // 5x normal speed
+
+        function toggleSuperSpeed() {
+            superSpeedActive = !superSpeedActive;
+            const btn = document.getElementById('speedBtn');
+            const state = superSpeedActive ? "ON" : "OFF";
+            btn.textContent = `SUPER SPEED: ${state}`;
+            btn.classList.toggle('on', superSpeedActive);
+            btn.classList.toggle('off', !superSpeedActive);
+
+            const speedValue = superSpeedActive ? HACKED_SPEED : NORMAL_SPEED;
+            console.log(`Super Speed Toggled. Speed Multiplier: ${speedValue}x`);
+
+            // === CRITICAL HACK INJECTION POINT ===
+            // This attempts to set the player's speed.
+            // You MUST find the actual 'GameObject Name' and 'Method Name' that controls the player's movement speed.
+            try {
+                // Assuming the game object is 'GameManager' and the method is 'SetPlayerSpeed'
+                gameInstance.SendMessage(
+                    'GameManager',                          // <<< REPLACE with the GameObject Name that holds the speed script
+                    'SetPlayerSpeed',                       // <<< REPLACE with the C# Method that sets speed
+                    speedValue                              // Send the new speed value
+                );
+            } catch (e) {
+                console.error("Failed to send Super Speed message. Ensure 'gameInstance' is correctly defined and the method names are correct.", e);
+            }
+        }
+
+        // Hide the loading overlay when the real Unity game is ready (or for the placeholder)
+        document.addEventListener('DOMContentLoaded', () => {
+             const overlay = document.getElementById('loading-overlay');
+             if (overlay) {
+                 setTimeout(() => { 
+                     overlay.style.display = 'none'; 
+                     console.info("Cheat wrapper loaded. Ready to inject!");
+                 }, 3000); // Simulate 3 second loading time
+             }
+        });
+        
+    </script>
+</body>
+</html>
